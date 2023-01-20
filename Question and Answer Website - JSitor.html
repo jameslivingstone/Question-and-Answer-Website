@@ -1,0 +1,272 @@
+<!doctype html><html><head><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"><script type="text/javascript" src="https://unpkg.com/bootstrap/dist/js/bootstrap.min.js"></script><style type="text/css">h6
+{
+font-weight: normal;
+}
+body{
+  padding: 30px;
+}</style></head><body><head>
+	<link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<title>
+		My First Website
+	</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<h1>Welcome to Chat</hl>
+<h4 id="response"></h4>
+<h6 id="question">What is your name?</h6>
+<form id="answerForm">
+
+  <div class="input-group">
+    <input placeholder="Enter answer here" type="text" id="answer" class="form-control"
+    aria-label="Enter answer here">
+    <button type="submit" class="btn btn-primary">
+      Submit
+    </button>
+  </div>
+</form>
+
+<form id="birthdayForm" style="display: none;">
+
+<div class="input-group">
+  
+  <select name="months" id="months" aria-label="Month">
+
+    <option value="January">January</option>
+    <option value="February">February</option>
+    <option value="March">March</option>
+    <option value="April">April</option>
+    <option value="May">May</option>
+    <option value="June">June</option>
+    <option value="July">July</option>
+    <option value="August">August</option>
+    <option value="September">September</option>
+    <option value="October">October</option>
+    <option value="November">November</option>
+    <option value="December">December</option>
+        
+
+  </select>
+
+
+  <input type="number" id="birthdayDayAnswer" min="1" max="31">
+
+  <button type="submit" class="btn btn-primary">
+      Submit
+  </button>
+</div>
+
+</form>
+
+<form id="holidayForm" style="display: none;">
+
+<div class="input-group">
+  <select name ="holidays" id="holidays" aria-label="Select holiday">
+    <option value="Chinese New Year">Chinese New Year</option>
+	  <option value="Christmas">Christmas</option>
+    <option value="Halloween">Halloween</option>
+    <option value="Hannukah">Hannukah</option>
+    <option value="Kwanza">Kwanza</option>
+    <option value="New Year">New Year</option>
+    <option value="Ramadan">Ramadan</option>
+  
+  </select>
+
+  <button type="submit" class="btn btn-primary">
+    Submit
+  </button>
+</div>
+</form>
+
+<button id="restartButton" class="btn btn-success">Restart</button><script type="text/javascript">var questionNumber = 0;
+
+const response = document.getElementById("response");
+
+function calculateHowManyDaysAway(date) {
+
+  const differenceInMilliseconds = date - new Date();
+
+  const millisecondsInASecond = 1000;
+
+  const differenceInSeconds = differenceInMilliseconds / millisecondsInASecond;
+
+  const secondsInAMinute = 60;
+
+  const differenceInMinutes = differenceInSeconds / secondsInAMinute;
+
+  const minutesInAnHour = 60;
+
+  const differenceInHours = differenceInMinutes / minutesInAnHour;
+
+  const hoursInADay = 24;
+
+  const differenceInDays = differenceInHours / hoursInADay;
+
+  const howManyDaysAwayIsTheDate = differenceInDays;
+  
+  return Math.ceil(howManyDaysAwayIsTheDate);
+
+}
+
+function calculateNextBirthday() {
+
+  let birthdayYear = new Date().getFullYear();
+  
+  const selectedBirthdayMonthElement = document.getElementById("months");
+
+  const birthdayMonth = selectedBirthdayMonthElement.selectedIndex + 1;
+
+  const birthdayDay = document.getElementById("birthdayDayAnswer").value;
+
+  let birthdayDate = new Date(birthdayYear + "-" + birthdayMonth + "-" + birthdayDay);
+
+  if (new Date() > birthdayDate) {
+    birthdayYear = birthdayYear + 1;
+    birthdayDate = new Date(birthdayYear + "-" + birthdayMonth + "-" + birthdayDay);
+  }
+
+   response.innerText = "Your birthday is " + calculateHowManyDaysAway(birthdayDate) + " days away";
+}
+
+function calculateNextHoliday() {
+
+
+  const holidays = document.getElementById("holidays");
+
+  const favoriteHoliday = holidays.options[holidays.selectedIndex].value;
+
+  let month = 1;
+  let day = 1;
+
+  switch (favoriteHoliday) {
+    case "Chinese New Year":
+      month = 1;
+      day = 22;
+      break;
+    case "Christmas":
+      month = 12;
+      day = 25;
+      break;
+    case "Halloween":
+      month = 10;
+      day = 31;
+      break;
+    case "Hannukah":
+      month = 12;
+      day = 7;
+      break;
+    case "Kwanza":
+      month = 12;
+      day = 26;
+      break;
+    case "New Year":
+      month = 1;
+      day = 1;
+      break;
+    case "Ramadan":
+      month = 3;
+      day = 26;
+      break;
+    default: 
+      month = 1;
+      day = 1;
+  }
+
+  let year = new Date().getFullYear();
+
+  let holidayDate = new Date(year + "-" + month + "-" + day);
+
+  if (new Date() > holidayDate) {
+    year++;
+    holidayDate = new Date(year + "-" + month + "-" + day);
+  }
+
+  const howManyDaysAwayIsHoliday = calculateHowManyDaysAway(holidayDate);
+
+  response.innerText = "Your holiday " + favoriteHoliday + " is " +
+  howManyDaysAwayIsHoliday + " days away.";
+}
+
+function runChatbot() {
+  event.preventDefault();
+
+  const answer = document.getElementById("answer").value;
+  const question = document.getElementById("question");
+  const answerForm = document.getElementById("answerForm");
+  const birthdayForm = document.getElementById("birthdayForm");
+  const holidayForm = document.getElementById("holidayForm");
+
+  if (questionNumber === -1) {
+
+    question.innerText = "What is your name?";
+    response.innerText = "";
+
+    answerForm.style.display = "block";
+    birthdayForm.style.display = "none";
+    holidayForm.style.display = "none";
+
+  }
+  else if (questionNumber === 0) {
+    response.innerText = "Your name is " + answer + ".";
+    question.innerText = "When is your birthday?";
+
+    
+    birthdayForm.style.display = "block";
+    answerForm.style.display = "none";
+  }
+  else if (questionNumber ===1) {
+
+      calculateNextBirthday();
+
+    question.innerText = "What is your favorite holiday?";
+
+    birthdayForm.style.display = "none";
+    holidayForm.style.display = "block";
+  }
+  else if (questionNumber ===2) {
+
+      calculateNextHoliday();
+
+     
+      question.innerText = "How old are you?";
+      answerForm.style.display = "block";
+      holidayForm.style.display = "none";
+  }
+  else if (questionNumber ===3) {
+
+    const yearOfBirth = new Date().getFullYear() - answer;
+
+    response.innerText = "You were born in " + yearOfBirth + ".";
+
+    question.innerText = "Thanks for playing!";
+
+    answerForm.style.display = "none";
+  }
+
+  questionNumber++;
+}
+
+const answerForm = document.getElementById("answerForm");
+answerForm.addEventListener("submit", function(event){
+  runChatbot();
+  document.getElementById("answer").value = "";
+
+});
+
+const birthdayForm = document.getElementById("birthdayForm");
+birthdayForm.addEventListener("submit", function(event){
+  runChatbot();
+});
+
+const holidayForm = document.getElementById("holidayForm");
+holidayForm.addEventListener("submit", function(event) {
+  runChatbot();
+});
+
+const restartButton = document.getElementById("restartButton");
+restartButton.addEventListener("click", function (event) {
+
+  questionNumber = -1;
+  runChatbot();
+
+});</script></body><html>
